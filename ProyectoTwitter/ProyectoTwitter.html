@@ -1,0 +1,207 @@
+<html>
+  <head>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://www.google.com/jsapi?key=dZ4EVmE8yGCRGx5XRX1W"></script>
+    <script type="text/javascript">
+
+     
+      function resultados() {
+        
+        var dimension = "population";
+        $.ajax({
+          url: "http://localhost:5984/sanbartolo/_all_docs/?limit=100&include_docs=true",
+          dataType: "JSON",
+          type:"get"
+        }).done(function(datos) {
+                
+          var contador=datos.total_rows; //contador del numero de registros
+          console.log(contador);
+
+          //creacion del mapa1
+          var statesArray = [["State",dimension]];
+          $.each(datos.states, function() {
+            var stateitem = [this.abbrev, this[dimension]];
+            statesArray.push(stateitem);
+            });
+
+          var tabladedatos = google.visualization.arrayToDataTable(statesArray);
+          var chart = new google.visualization.GeoChart(document.getElementById('mapa1_div'));
+          chart.draw(tabladedatos, {region: 'EC', resolution: 'provinces'});
+
+          //creacion del mapa2
+          
+          //creacion de la tabla1
+          var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Usuario');
+        data.addColumn('number', 'Numero de amigos');
+         data.addColumn('number', 'Numero de seguidores');
+
+        
+        
+        
+        //data.addColumn('boolean', 'Full Time Employee');
+        
+        var contador=datos.total_rows;
+        var contador=10;
+
+        for(var i=0;i<contador; i++){ 
+           var user=datos.rows[i].doc.user.screen_name;
+           var texttweet=datos.rows[i].doc.user.friends_count;
+           var seguidores=datos.rows[i].doc.user.followers_count;
+           console.log(datos.rows[i].doc);
+           data.addRow();
+           data.setValue(i,0, user);
+           data.setValue(i,1, texttweet);
+           data.setValue(i,2, seguidores);
+           //console.log(user);
+        };
+  var data3 = new google.visualization.DataTable();
+        data3.addColumn('string', 'Usuario');
+        data3.addColumn('number', 'Numero de amigos');
+         data3.addColumn('number', 'Numero de seguidores');
+
+        
+        
+        
+        //data.addColumn('boolean', 'Full Time Employee');
+        
+        var contador=datos.total_rows;
+        var contador=10;
+
+        for(var i=0;i<5; i++){ 
+           var user=datos.rows[i].doc.user.screen_name;
+           var texttweet=datos.rows[i].doc.user.friends_count;
+           var seguidores=datos.rows[i].doc.user.followers_count;
+           console.log(datos.rows[i].doc);
+           data3.addRow();
+           data3.setValue(i,0, user);
+           data3.setValue(i,1, texttweet);
+           data3.setValue(i,2, seguidores);
+           //console.log(user);
+        };
+
+        var table = new google.visualization.Table(document.getElementById('tabla2_div'));
+
+        table.draw(data, {showRowNumber: true, width: '100%', height: '100%'});
+        
+
+
+
+
+
+          //creacion de la tabla2
+
+         var data2 = new google.visualization.DataTable();
+        data2.addColumn('string', 'Usuario');
+        data2.addColumn('string', 'Descripcion');
+     
+         var contador=datos.total_rows;
+        var contador=10;
+
+        for(var i=0;i<contador; i++){ 
+           var nombre=datos.rows[i].doc.user.screen_name;
+           var descripcion=datos.rows[i].doc.user.description;
+         
+           console.log(datos.rows[i].doc);
+           data2.addRow();
+           data2.setValue(i,0, nombre);
+           data2.setValue(i,1, descripcion);
+        
+           //console.log(user);
+        };
+
+        var table1 = new google.visualization.Table(document.getElementById('tabla1_div'));
+
+        table1.draw(data2, {showRowNumber: true, width: '100%', height: '100%'});
+          //creacion del chart1
+           for(var i=0;i<contador; i++){ 
+           var user=datos.rows[i].doc.user.screen_name;
+           var texttweet=datos.rows[i].doc.user.friends_count;
+           var seguidores=datos.rows[i].doc.user.followers_count;
+           console.log(datos.rows[i].doc);
+          
+           //console.log(user);
+        }
+       
+
+
+
+
+
+
+     //}
+
+        var options = {
+          chart: {
+            title: 'tweets',
+            subtitle: 'Proyecto Base de datos',
+          }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('chart1_div'));
+
+        chart.draw(data3, options);
+          //creacion del chart2
+          var data = google.visualization.arrayToDataTable([
+          ['Age', 'Weight'],
+          [ 8,      12],
+          [ 4,      5.5],
+          [ 11,     14],
+          [ 4,      5],
+          [ 3,      3.5],
+          [ 6.5,    7]
+        ]);
+
+        var options = {
+          title: 'Age vs. Weight comparison',
+          hAxis: {title: 'Age', minValue: 0, maxValue: 15},
+          vAxis: {title: 'Weight', minValue: 0, maxValue: 15},
+          legend: 'none'
+        };
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart2_div'));
+
+        chart.draw(data, options);
+
+         // $("h3").append(" Sorted by  "+dimension);
+          
+        });
+}
+
+
+google.load('visualization', '1', {'packages': ['table', 'map', 'corechart','annotationchart','motionchart','geochart','bar']});
+google.setOnLoadCallback(resultados); //lamada a la funcion principal
+    </script>
+  </head>
+  <body>
+    
+
+<div class="container-fluid">
+  <div class="row clearfix" style="border:0px solid#888">
+    <div id="mapa1_div" class="col-lg-6" style="border:1px solid#888;height:350px">mapa1
+    </div>
+    <div id="mapa2_div" class="col-lg-6" style="border:1px solid#888;height:350px">mapa2<br>
+    </div>
+  </div>
+  <div class="row">
+    <div id="tabla1_div" class="col-lg-6" style="border:1px solid#888;height:350px">tabla1
+    </div>
+    <div id="tabla2_div" class="col-lg-6" style="border:1px solid#888;height:350px">tabla2
+    </div>
+  </div>
+  <div class="row">
+    <div id="chart1_div" class="col-lg-12" style="border:1px solid#888;height:350px">chart1
+    </div>
+    <div id="chart2_div" class="col-lg-12" style="border:1px solid#888;height:350px">chart2
+    </div>
+  </div>
+</div>
+
+
+  </body>
+</html>
